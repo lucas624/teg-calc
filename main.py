@@ -1,26 +1,52 @@
 #!/usr/bin/env python3
-import time
+import sys
 
-def main(cant_dados_atacante = 3,cant_dados_defensor = 3):
-    resultado_absoluto = {}
-    for atacante in dados(cant_dados_atacante):
-        for defensor in dados(cant_dados_defensor):
+def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, probabilidades, depth = 0):
+    print("-"*depth+"atacante: ", ejercitos_atacante, " defensor:", ejercitos_defensor)
+    if ejercitos_atacante == 0:
+        resultado_absoluto["defensor_gana"] += probabilidades
+        return None
+    if ejercitos_defensor == 0:
+        resultado_absoluto["atacante_gana"]  += probabilidades
+        return None
+    resultados = {}
+    cont = 0
+    for atacante in dados(cant_dados(ejercitos_atacante)):
+        for defensor in dados(cant_dados(ejercitos_defensor)):
+            #print(atacante,defensor)
             resultadillo = traducir_a_resultado(batalla_simple(atacante,defensor))
-            if resultadillo in resultado_absoluto:
-                resultado_absoluto[resultadillo] += 1
+            #print(resultadillo)
+            if resultadillo in resultados:
+                resultados[resultadillo] += 1
             else:
-                resultado_absoluto[resultadillo] = 1
+                resultados[resultadillo] = 1
+    suma = sum(resultados.values())
+    for key in resultados:
+        resultados[key] = resultados[key]/suma
+    for key in resultados:
+        #print(ejercitos_atacante,"-", key[0], "==", ejercitos_atacante - int(key[0]), "con key =", key)
+        #if ejercitos_defensor - int(key[2]) == -1:
+        #    print("ERRORES!!!!")
+        #    print(ejercitos_defensor,"-", key[2], "==", ejercitos_defensor - int(key[2]), "con key =", key, "| depth = ", depth)
+        #    print(resultados)
+        #    print("FIN DE ERRORES!!!!")
+        batalla_main(ejercitos_atacante - int(key[0]), ejercitos_defensor - int(key[2]), resultado_absoluto, probabilidades * resultados[key], depth + 1)
     print(resultado_absoluto)
     return resultado_absoluto
 
 def print_resultados(d):
     for key in d:
-        print("{0} {1:.2f}".format(key, d[key]*100/sum(d.values())))
+        print("atacante pierde:{} y defensor pierde:{}  {:.2f}".format(key[0], key[2], d[key]*100/sum(d.values())))
 
+def cant_dados(ejercitos):
+    if ejercitos > 2:
+        return 3
+    else:
+        return ejercitos 
 
 def dados(cant_dados):
     resultados = [1]*cant_dados
-    yield resultados
+    yield resultados[:]
     while True:
         resultados = inc_dados(resultados)
         yield resultados[:]
@@ -64,4 +90,5 @@ def ordenar_dados(d):
     return d
 
 if __name__=='__main__':
-    main()
+    batalla_main(int(sys.argv[1]), int(sys.argv[2]), {"atacante_gana":0,"defensor_gana":0}, 1)
+
