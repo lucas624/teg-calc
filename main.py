@@ -2,7 +2,7 @@
 import sys
 
 def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, probabilidades, depth = 0):
-    print("-"*depth+"atacante: ", ejercitos_atacante, " defensor:", ejercitos_defensor)
+    #print("-"*depth+"atacante: ", ejercitos_atacante, " defensor:", ejercitos_defensor)
     if ejercitos_atacante == 0:
         resultado_absoluto["defensor_gana"] += probabilidades
         return None
@@ -23,12 +23,14 @@ def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, prob
         resultados[key] = resultados[key]/suma
     for key in resultados:
         batalla_main(ejercitos_atacante - int(key[0]), ejercitos_defensor - int(key[2]), resultado_absoluto, probabilidades * resultados[key], depth + 1)
-    print(resultado_absoluto)
     return resultado_absoluto
 
 def print_resultados(d):
     for key in d:
         print("atacante pierde:{} y defensor pierde:{}  {:.2f}".format(key[0], key[2], d[key]*100/sum(d.values())))
+
+def print_resultado_absoluto(d):
+    print("atacante gana :{:.2f}% y defensor gana:{:.2f}%".format(d["atacante_gana"]*100,d["defensor_gana"]*100))
 
 def cant_dados(ejercitos):
     if ejercitos > 2:
@@ -82,5 +84,5 @@ def ordenar_dados(d):
     return d
 
 if __name__=='__main__':
-    batalla_main(int(sys.argv[1]), int(sys.argv[2]), {"atacante_gana":0,"defensor_gana":0}, 1)
-
+    resultado = batalla_main(int(sys.argv[1]), int(sys.argv[2]), {"atacante_gana":0,"defensor_gana":0}, 1)
+    print_resultado_absoluto(resultado)
