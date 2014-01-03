@@ -13,9 +13,7 @@ def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, prob
     cont = 0
     for atacante in dados(cant_dados(ejercitos_atacante)):
         for defensor in dados(cant_dados(ejercitos_defensor)):
-            #print(atacante,defensor)
             resultadillo = traducir_a_resultado(batalla_simple(atacante,defensor))
-            #print(resultadillo)
             if resultadillo in resultados:
                 resultados[resultadillo] += 1
             else:
@@ -24,12 +22,6 @@ def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, prob
     for key in resultados:
         resultados[key] = resultados[key]/suma
     for key in resultados:
-        #print(ejercitos_atacante,"-", key[0], "==", ejercitos_atacante - int(key[0]), "con key =", key)
-        #if ejercitos_defensor - int(key[2]) == -1:
-        #    print("ERRORES!!!!")
-        #    print(ejercitos_defensor,"-", key[2], "==", ejercitos_defensor - int(key[2]), "con key =", key, "| depth = ", depth)
-        #    print(resultados)
-        #    print("FIN DE ERRORES!!!!")
         batalla_main(ejercitos_atacante - int(key[0]), ejercitos_defensor - int(key[2]), resultado_absoluto, probabilidades * resultados[key], depth + 1)
     print(resultado_absoluto)
     return resultado_absoluto
@@ -56,15 +48,15 @@ def dados(cant_dados):
 
 def inc_dados(dados):
     dados[-1] += 1
-    for i in range(1,len(dados)+1):
-        if dados[-i] == 7:
-            dados[-(i+1)] += 1
-            dados[-i] = 1
-    return dados
-
+    while True:
+        try:
+            index = dados.index(7)
+        except ValueError:
+            return dados
+        dados[index]   = 1
+        dados[index-1] += 1
 
 def batalla_simple(atacante,defensor):
-
     resultado = []
     atacante = ordenar_dados(atacante)
     defensor = ordenar_dados(defensor)
