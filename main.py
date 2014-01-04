@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 
+
 def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, probabilidades, depth = 0):
     #print("-"*depth+"atacante: ", ejercitos_atacante, " defensor:", ejercitos_defensor)
     if ejercitos_atacante == 0:
@@ -21,8 +22,14 @@ def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, prob
     suma = sum(resultados.values())
     for key in resultados:
         resultados[key] = resultados[key]/suma
+    print("atacante:",ejercitos_atacante)
+    print("defensor:",ejercitos_atacante)
+    print(resultados)
+    input()
     for key in resultados:
         batalla_main(ejercitos_atacante - int(key[0]), ejercitos_defensor - int(key[2]), resultado_absoluto, probabilidades * resultados[key], depth + 1)
+    global count_returns
+    count_returns += 1
     return resultado_absoluto
 
 def print_resultados(d):
@@ -59,6 +66,8 @@ def inc_dados(dados):
         dados[index-1] += 1
 
 def batalla_simple(atacante,defensor):
+    global count_iterate
+    count_iterate += 1
     resultado = []
     atacante = ordenar_dados(atacante)
     defensor = ordenar_dados(defensor)
@@ -84,5 +93,11 @@ def ordenar_dados(d):
     return d
 
 if __name__=='__main__':
+    count_returns = 0
+    count_iterate = 0
     resultado = batalla_main(int(sys.argv[1]), int(sys.argv[2]), {"atacante_gana":0,"defensor_gana":0}, 1)
     print_resultado_absoluto(resultado)
+    print("cosas devueltas", count_returns)
+    print("veces entradas a la batalla simple", count_iterate)
+
+
