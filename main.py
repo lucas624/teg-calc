@@ -23,7 +23,7 @@ def calcular_probabilidades():
     return dict(resultado_absoluto)
 
 def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, probabilidades, depth = 0):
-    print("{:.2f} {} atacante: {} defensor: {}".format(sum(resultado_absoluto.values())*100, "--"*depth, ejercitos_atacante, ejercitos_defensor))
+    #print("{:.2f} {} atacante: {} defensor: {}".format(sum(resultado_absoluto.values())*100, "--"*depth, ejercitos_atacante, ejercitos_defensor))
     if ejercitos_atacante == 0:
         resultado_absoluto["defensor_gana"] += probabilidades
         return None
