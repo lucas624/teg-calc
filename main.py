@@ -1,6 +1,27 @@
 #!/usr/bin/env python3
 import sys
 
+def calcular_probabilidades():
+    resultados = {}
+    for atacante in dados(cant_dados(ejercitos_atacante)):
+        for defensor in dados(cant_dados(ejercitos_defensor)):
+            resultadillo = traducir_a_resultado(batalla_simple(atacante,defensor))
+            if resultadillo in resultados:
+                resultados[resultadillo] += 1
+            else:
+                resultados[resultadillo] = 1
+    suma = sum(resultados.values())
+    for key in resultados:
+        resultados[key] = resultados[key]/suma
+    print("atacante:",ejercitos_atacante)
+    print("defensor:",ejercitos_atacante)
+    print(resultados)
+    input()
+    for key in resultados:
+        batalla_main(ejercitos_atacante - int(key[0]), ejercitos_defensor - int(key[2]), resultado_absoluto, probabilidades * resultados[key], depth + 1)
+    global count_returns
+    count_returns += 1
+    return resultado_absoluto
 
 def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, probabilidades, depth = 0):
     #print("-"*depth+"atacante: ", ejercitos_atacante, " defensor:", ejercitos_defensor)
@@ -11,7 +32,6 @@ def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, prob
         resultado_absoluto["atacante_gana"]  += probabilidades
         return None
     resultados = {}
-    cont = 0
     for atacante in dados(cant_dados(ejercitos_atacante)):
         for defensor in dados(cant_dados(ejercitos_defensor)):
             resultadillo = traducir_a_resultado(batalla_simple(atacante,defensor))
