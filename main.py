@@ -1,55 +1,44 @@
 #!/usr/bin/env python3
 import sys
 
+count_returns = 0
+count_iterate = 0
+
 def calcular_probabilidades():
-    resultados = {}
-    for atacante in dados(cant_dados(ejercitos_atacante)):
-        for defensor in dados(cant_dados(ejercitos_defensor)):
-            resultadillo = traducir_a_resultado(batalla_simple(atacante,defensor))
-            if resultadillo in resultados:
-                resultados[resultadillo] += 1
-            else:
-                resultados[resultadillo] = 1
-    suma = sum(resultados.values())
-    for key in resultados:
-        resultados[key] = resultados[key]/suma
-    print("atacante:",ejercitos_atacante)
-    print("defensor:",ejercitos_atacante)
-    print(resultados)
-    input()
-    for key in resultados:
-        batalla_main(ejercitos_atacante - int(key[0]), ejercitos_defensor - int(key[2]), resultado_absoluto, probabilidades * resultados[key], depth + 1)
-    global count_returns
-    count_returns += 1
-    return resultado_absoluto
+    resultado_absoluto = {}
+    for cant_dados_atacante in range(1,4):
+        for cant_dados_defensor in range(1,4):            
+            resultados = {}
+            for atacante in dados(cant_dados_atacante):
+                for defensor in dados(cant_dados_defensor):
+                    resultadillo = traducir_a_resultado(batalla_simple(atacante,defensor))
+                    if resultadillo in resultados:
+                        resultados[resultadillo] += 1
+                    else:
+                        resultados[resultadillo] = 1
+            suma = sum(resultados.values())
+            for key in resultados:
+                resultados[key] = resultados[key]/suma
+            resultado_absoluto[str(cant_dados_atacante)+"vs"+str(cant_dados_defensor)] = dict(resultados)
+    return dict(resultado_absoluto)
 
 def batalla_main(ejercitos_atacante,ejercitos_defensor, resultado_absoluto, probabilidades, depth = 0):
-    #print("-"*depth+"atacante: ", ejercitos_atacante, " defensor:", ejercitos_defensor)
+    print("{:.2f} {} atacante: {} defensor: {}".format(sum(resultado_absoluto.values())*100, "--"*depth, ejercitos_atacante, ejercitos_defensor))
     if ejercitos_atacante == 0:
         resultado_absoluto["defensor_gana"] += probabilidades
         return None
     if ejercitos_defensor == 0:
         resultado_absoluto["atacante_gana"]  += probabilidades
         return None
-    resultados = {}
-    for atacante in dados(cant_dados(ejercitos_atacante)):
-        for defensor in dados(cant_dados(ejercitos_defensor)):
-            resultadillo = traducir_a_resultado(batalla_simple(atacante,defensor))
-            if resultadillo in resultados:
-                resultados[resultadillo] += 1
-            else:
-                resultados[resultadillo] = 1
-    suma = sum(resultados.values())
-    for key in resultados:
-        resultados[key] = resultados[key]/suma
-    print("atacante:",ejercitos_atacante)
-    print("defensor:",ejercitos_atacante)
-    print(resultados)
-    input()
+    global super_probabilidades
+    resultados = super_probabilidades[str(cant_dados(ejercitos_atacante))+"vs"+str(cant_dados(ejercitos_defensor))]
+    #print("atacante:",ejercitos_atacante)
+    #print("defensor:",ejercitos_atacante)
+    #print(resultados)
     for key in resultados:
         batalla_main(ejercitos_atacante - int(key[0]), ejercitos_defensor - int(key[2]), resultado_absoluto, probabilidades * resultados[key], depth + 1)
-    global count_returns
-    count_returns += 1
+    #global count_returns
+    #count_returns += 1
     return resultado_absoluto
 
 def print_resultados(d):
@@ -86,8 +75,8 @@ def inc_dados(dados):
         dados[index-1] += 1
 
 def batalla_simple(atacante,defensor):
-    global count_iterate
-    count_iterate += 1
+    #global count_iterate
+    #count_iterate += 1
     resultado = []
     atacante = ordenar_dados(atacante)
     defensor = ordenar_dados(defensor)
@@ -115,9 +104,10 @@ def ordenar_dados(d):
 if __name__=='__main__':
     count_returns = 0
     count_iterate = 0
+    super_probabilidades = calcular_probabilidades()
     resultado = batalla_main(int(sys.argv[1]), int(sys.argv[2]), {"atacante_gana":0,"defensor_gana":0}, 1)
     print_resultado_absoluto(resultado)
-    print("cosas devueltas", count_returns)
-    print("veces entradas a la batalla simple", count_iterate)
+    #print("cosas devueltas", count_returns)
+    #print("veces entradas a la batalla simple", count_iterate)
 
 
